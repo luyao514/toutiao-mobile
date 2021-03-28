@@ -1,6 +1,11 @@
 <template>
   <div class="login-container">
-    <van-nav-bar class="page-nav-bar" title="登录" />
+    <van-nav-bar
+      left-arrow
+      @click-left="$router.back()"
+      class="page-nav-bar"
+      title="登录"
+    />
     <van-form @submit="onSubmit" ref="loginForm">
       <van-field
         v-model="user.mobile"
@@ -105,8 +110,12 @@ export default {
         // 4.根据响应结果处理后续操作
         this.$toast.success('登录成功')
         this.$store.commit('setToken', data.data)
+        // 跳转回之前的页面
+        this.$router.go(-1)
+        // 通知登录成功的消息
+        this.$notify({ type: 'success', message: '登录成功' })
       } catch (err) {
-        if (err.response.status === 400) {
+        if (err.responce && err.response.status === 400) {
           this.$toast.fail('手机号或验证码错误')
         } else {
           this.$toast.fail('登录失败，请稍后重试')
